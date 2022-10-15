@@ -1,18 +1,10 @@
-/*! @file db/Netlist.cpp
-    @brief Netlist class implementation.
-    @author Mingjie Liu
-    @date 11/24/2018
-*/
 #include "db/Netlist.h"
 #include <algorithm>
 #include <iostream>
 
 PROJECT_NAMESPACE_BEGIN
 
-/*! @brief Mos Pin Types */
 static const PinType MOS_PIN_TYPE[4] = {PinType::DRAIN, PinType::GATE, PinType::SOURCE, PinType::BULK};
-/*! @brief Res/Cap Pin Types */
-static const PinType RES_PIN_TYPE[3] = {PinType::THIS, PinType::THAT, PinType::OTHER};
 
 bool Netlist::isMos(InstType instType) const
 {
@@ -48,48 +40,22 @@ void Netlist::init(InitDataObj & obj)
 // Add all Net to Netlist 
     for (InitNet & net : obj.netArray)
         _netArray.emplace_back(net.name, net.id); 
-// Add all Inst to Netlist 
+// Add all Mos to Netlist 
     for (InitInst & inInst : obj.instArray)
     {
-// If added Inst is Mosfet 
+// If added Mos is Mosfet 
         if (isMos(inInst.type))
         {
-            Inst inst(inInst.name, inInst.type, _instArray.size(), inInst.wid, inInst.len, inInst.nf);
+            Mos inst(inInst.name, inInst.type, _instArray.size(), inInst.wid, inInst.len, inInst.nf);
             for (IndexType i = 0; i < 4; i++)
             {
-                inst.addPinId(_pinArray.size()); // Add pin to Inst 
+                inst.addPinId(_pinArray.size()); // Add pin to Mos 
                 _netArray[inInst.netIdArray.at(i)].addPinId(_pinArray.size()); // Add pin to Net 
                 _pinArray.emplace_back(_pinArray.size(), inst.id(),
                                         inInst.netIdArray.at(i), MOS_PIN_TYPE[i]); // Add Pin    
             }
             _instArray.push_back(inst);
         }
-// If added Inst is Res/Cap 
-        else if (isPasvDev(inInst.type))
-        {
-            Inst inst(inInst.name, inInst.type, _instArray.size(), inInst.wid, inInst.len, inInst.nf);
-            for (IndexType i = 0; i < inInst.netIdArray.size(); i++) //Modified for 2/3 pin passives
-            {
-                inst.addPinId(_pinArray.size());
-                _netArray[inInst.netIdArray.at(i)].addPinId(_pinArray.size());
-                _pinArray.emplace_back(_pinArray.size(), inst.id(), 
-                                        inInst.netIdArray.at(i), RES_PIN_TYPE[i]);
-            }
-            _instArray.push_back(inst);
-        }
-// Handle Std Cells in future 
-        else
-        {
-            Inst inst(inInst.name, inInst.type, _instArray.size());
-            for (IndexType netId : inInst.netIdArray)
-            {
-                inst.addPinId(_pinArray.size());
-                _netArray[netId].addPinId(_pinArray.size());
-                _pinArray.emplace_back(_pinArray.size(), inst.id(), 
-                                        netId, PinType::OTHER);                
-            }    
-            _instArray.push_back(inst);
-        } 
     }
 }
 
@@ -100,8 +66,8 @@ void Netlist::print_all() const
     {
         std::printf("Net %d, %s \n", net.id(), net.name().c_str());
     }
-// Print Inst 
-    for (const Inst & inst : _instArray)
+// Print Mos 
+    for (const Mos & inst : _instArray)
     {
         std::printf("Instance %d, %s \n", inst.id(), inst.name().c_str()); 
         for (IndexType pinId : inst.pinIdArray())
@@ -249,7 +215,7 @@ PinType Netlist::getPinTypeInstNetConn(IndexType instId, IndexType netId) const
     for (IndexType instPinId : _instArray[instId].pinIdArray())
         if (_pinArray[instPinId].netId() == netId)
             return _pinArray[instPinId].type();
-    return PinType::OTHER; // Caution 
+    return PinType::BULK; // Caution 
 }
 
 PinType Netlist::getPinTypeInstPinConn(IndexType instId, IndexType pinId) const
