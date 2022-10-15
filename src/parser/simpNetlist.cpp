@@ -77,7 +77,7 @@ bool simpNetlist::read(const std::string &fileName)
 
     std::vector<Net>                _netArray;
     std::vector<Pin>                _pinArray;
-    std::vector<Inst>               _instArray;
+    std::vector<Mos>               _instArray;
 
     _netlistDB.init(obj);
     return true;

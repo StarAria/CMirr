@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     Netlist netlist;
     simpNetlist parser = simpNetlist(netlist);
     std::string inFile(argv[1]);
-    parser.read(inFile); //initialize netlist with parser
+    parser.read(inFile);
     CMirrExt instCurrent(netlist);
     instCurrent.printResult();
 

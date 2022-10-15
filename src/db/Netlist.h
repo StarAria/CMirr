@@ -1,8 +1,3 @@
-/*! @file db/Netlist.h
-    @brief Netlist class
-    @author Mingjie Liu
-    @date 11/24/2018
-*/
 #ifndef __NETLIST_H__
 #define __NETLIST_H__
 
@@ -11,7 +6,7 @@
 #include "global/type.h"
 #include "db/Net.h"
 #include "db/Pin.h"
-#include "db/Inst.h"
+#include "db/MOS.h"
 
 PROJECT_NAMESPACE_BEGIN
 /*! @class Netlist
@@ -29,7 +24,7 @@ public:
         IndexType                   id = INDEX_TYPE_MAX;
     };
 /*! @struct InitInst
-    @brief Inst for instantiation.
+    @brief Mos for instantiation.
 */
     struct InitInst
     {
@@ -82,48 +77,48 @@ public:
 
 /*! @brief Return MosType of corresponding instance id. */
     MosType                         mosType(IndexType mosId) const;
-/*! @brief Return Id of Net connected to Inst by certain PinType.
+/*! @brief Return Id of Net connected to Mos by certain PinType.
 
     Example: instNetId(0, PinType::DRAIN) would return the net index 
     connected to inst[0] through a pin which PinType::DRAIN. Or this 
-    returns inst[0] drain net. If the Inst does not have a PinType 
+    returns inst[0] drain net. If the Mos does not have a PinType 
     connected, INDEX_TYPE_MAX would be returned. Use at risk and 
     only if InstType is known. 
 
-    @param instId Id of Inst.
+    @param instId Id of Mos.
     @param pinType Returned Net Id connected to this PinType.
 */
     IndexType                       instNetId(IndexType instId, PinType pinType) const;
-/*! @brief Return Id of Pin with PinType connected to Inst.
+/*! @brief Return Id of Pin with PinType connected to Mos.
 
     Example: instPinId(0,PinType::DRAIN) would return the pin index
     connected to inst[0] which is PinType::DRAIN. Or this returns
-    inst[0] drain pin index. If Inst does not have a PinType connected,
+    inst[0] drain pin index. If Mos does not have a PinType connected,
     INDEX_TYPE_MAX would be returned. Use at risk and only if InstType 
     is known.
 
-    @param instId Id of Inst.
+    @param instId Id of Mos.
     @param pinType Returned Pin Id should be this PinType.
 */
     IndexType                       instPinId(IndexType instId, PinType pinType) const;
 
-/*! @brief Return Source Net Id of Inst mosId.
+/*! @brief Return Source Net Id of Mos mosId.
     Equivalent as instNetId(mosId, PinType::SOURCE);
     @see instNetId.
 */
     IndexType                       srcNetId(IndexType mosId) const     { return instNetId(mosId, PinType::SOURCE); }
-/*! @brief Return Drain Net Id of Inst mosId.
+/*! @brief Return Drain Net Id of Mos mosId.
     Equivalent as instNetId(mosId, PinType::DRAIN);
     @see instNetId
 */
     IndexType                       drainNetId(IndexType mosId) const   { return instNetId(mosId, PinType::DRAIN); }
-/*! @brief Return Gate Net Id of Inst mosId.
+/*! @brief Return Gate Net Id of Mos mosId.
     Equivalent as instNetId(mosId, PinType::GATE);
     @see instNetId.
 */
     IndexType                       gateNetId(IndexType mosId) const    { return instNetId(mosId, PinType::GATE); }
 
-/*! @brief Get PinType of a pin such that Inst and Pin are connected through this pin.
+/*! @brief Get PinType of a pin such that Mos and Pin are connected through this pin.
 
     Example: Suppose pin[0] of inst[1] is connected to pin[2]
     (through some net). getPinTypeInstPinConn(1,2) would return 
@@ -133,11 +128,11 @@ public:
     By definition this pin must belong to instId and be connected
     to pinId through some net. If no such pin exists PinType::OTHER is returned.
 
-    @param instId Id of Inst that returned pin is connected.
+    @param instId Id of Mos that returned pin is connected.
     @param pinId Id of Pin that returned pin is connected.
 */
     PinType                         getPinTypeInstPinConn(IndexType instId, IndexType pinId) const;
-/*! @brief Get PinType of a pin such that Inst and Net are connected through this pin.
+/*! @brief Get PinType of a pin such that Mos and Net are connected through this pin.
 
     Example: Suppose pin[0] of inst[1] is connected to net[2].
     getPinTypeInstNetConn(1,2) would return PinType of pin[0].
@@ -147,27 +142,27 @@ public:
     By definition this pin must belong to instId and be connected
     to netId. If no such pin exists PinType::OTHER is returned.
 
-    @param instId Id of Inst that returned pin is connected.
+    @param instId Id of Mos that returned pin is connected.
     @param netId Id of Net that returned pin is connected.
 */
     PinType                         getPinTypeInstNetConn(IndexType instId, IndexType netId) const;
 
-/*! @brief Get all Inst that are connected to netId.
+/*! @brief Get all Mos that are connected to netId.
 
-    @param[out] instArray Array of the returned Inst Id.
+    @param[out] instArray Array of the returned Mos Id.
     @param[in] netId Id of net.
 */
     void                            getInstNetConn(std::vector<IndexType> & instArray, IndexType netId) const;
-/*! @brief Get all Inst that are connected to pinId(through some net).
+/*! @brief Get all Mos that are connected to pinId(through some net).
     
     The instance that pinId itself belongs to is not returned.
 
-    @param[out] instArray Array of the returned Inst Id.
+    @param[out] instArray Array of the returned Mos Id.
     @param[in] pinId Id of pin.
 */
     void                            getInstPinConn(std::vector<IndexType> & instArray, IndexType pinId) const;
 
-/*! @brief Remove from array, Inst that has pinId.
+/*! @brief Remove from array, Mos that has pinId.
 
     O(n) complexity guaranteed. Similar implementation of std::remove().
     
@@ -176,7 +171,7 @@ public:
 */
     void                            rmvInstHasPin(std::vector<IndexType> & instArray, IndexType pinId) const;
 
-/*! @brief Filter instArray. Remove Inst that are connected to pinId through connPinType.
+/*! @brief Filter instArray. Remove Mos that are connected to pinId through connPinType.
 
     Removed instId if getPinTypeInstPinConn(instId, pinId) == connPinType.
     O(n) complexity. Similar implementation of std::remove().
@@ -184,7 +179,7 @@ public:
     @see getPinTypeInstPinConn.
 */
     void                            fltrInstPinConnPinType(std::vector<IndexType> & instArray, IndexType pinId, PinType connPinType) const;
-/*! @brief Filter instArray. Remove Inst that are connected to netId through connPinType.
+/*! @brief Filter instArray. Remove Mos that are connected to netId through connPinType.
 
     Removed instId if getPinTypeInstNetConn(instId, pinId) == connPinType.
     O(n) complexity. Similar implementation of std::remove().
@@ -192,7 +187,7 @@ public:
     @see getPinTypeInstNetConn.
 */
     void                            fltrInstNetConnPinType(std::vector<IndexType> & instArray, IndexType netId, PinType connPinType) const;
-/*! @brief Filter instArray. Remove Mosfet Inst whose type are not mosType.
+/*! @brief Filter instArray. Remove Mosfet Mos whose type are not mosType.
 
     Removed instId if mosType(instId) != mosType. 
     O(n) complexity. Similar implementation of std::remove().
@@ -200,7 +195,7 @@ public:
     @see getPinTypeInstNetConn.
 */
     void                            fltrInstMosType(std::vector<IndexType> & instArray, MosType mosType) const;
-/*! @brief Filter instArray. Remove Inst whose type are not type.
+/*! @brief Filter instArray. Remove Mos whose type are not type.
 
     Removed instId if InstType of instance 
     is different from input type.
@@ -212,13 +207,13 @@ public:
     const Pin &                     pin(IndexType id) const             { return _pinArray.at(id); }
 /*! @brief Return Net of Id. */
     const Net &                     net(IndexType id) const             { return _netArray.at(id); }
-/*! @brief Return Inst of Id. */
-    const Inst &                    inst(IndexType id) const            { return _instArray.at(id); }
+/*! @brief Return Mos of Id. */
+    const Mos &                    inst(IndexType id) const            { return _instArray.at(id); }
 /*! @brief Return number of Pin. */
     IndexType                       numPin() const                      { return _pinArray.size(); }
 /*! @brief Return number of Net. */
     IndexType                       numNet() const                      { return _netArray.size(); }
-/*! @brief Return number of Inst. */
+/*! @brief Return number of Mos. */
     IndexType                       numInst() const                     { return _instArray.size(); }
     IndexType                       instId(int arrayid)                 { return _instArray[arrayid].id();}
 
@@ -227,13 +222,13 @@ public:
     void                            addPin(Pin & pin)                   { _pinArray.push_back(pin); }
 /*! @brief Add Net to Netlist. */
     void                            addNet(Net & net)                   { _netArray.push_back(net); }
-/*! @brief Add Inst to Netlist. */
-    void                            addInst(Inst & inst)                { _instArray.push_back(inst); }
+/*! @brief Add Mos to Netlist. */
+    void                            addInst(Mos & inst)                { _instArray.push_back(inst); }
 
 private:    
     std::vector<Net>                _netArray;
     std::vector<Pin>                _pinArray;
-    std::vector<Inst>               _instArray;
+    std::vector<Mos>               _instArray;
 };
 
 PROJECT_NAMESPACE_END
