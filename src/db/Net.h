@@ -38,10 +38,6 @@ public:
     // Setters
 /*! Connect a pin to the net. */
     void                        addPinId(IndexType pinId)   { _pinIdArray.push_back(pinId); } 
-/*! @brief Return net type.
-    @see #NetType.
-*/
-    NetType                     netType() const; 
     
 private:
     std::string                 _name;

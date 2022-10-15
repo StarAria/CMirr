@@ -80,9 +80,6 @@ public:
 */
     bool                            isPasvDev(InstType instType) const;
 
-/*! @brief Return true if corresponding net NetType::Signal. */
-    bool                            isSignal(IndexType netId) const     { return _netArray[netId].netType() == NetType::SIGNAL; }
-
 /*! @brief Return MosType of corresponding instance id. */
     MosType                         mosType(IndexType mosId) const;
 /*! @brief Return Id of Net connected to Inst by certain PinType.

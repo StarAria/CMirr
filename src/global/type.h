@@ -35,16 +35,6 @@ enum class InstType : Byte
     OTHER /*!< Other */
 };
 
-/*! @enum NetType
-    @brief Type of Net.
-*/
-enum class NetType : Byte
-{ 
-    POWER, /*!< Power */
-    GROUND, /*!< Ground */
-    SIGNAL /*!< Signal */
-};
-
 /*! @enum PinType
     @brief Type of Pin.
 */
