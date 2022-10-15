@@ -1,7 +1,7 @@
 
 #include <string>
 #include "parser/simpNetlist.h"
-#include "CMirrDetect.h"
+#include "MirrExt/CMirrExt.h"
 
 int main(int argc, char* argv[])
 {
@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     simpNetlist parser = simpNetlist(netlist);
     std::string inFile(argv[1]);
     parser.read(inFile); //initialize netlist with parser
-    CMirrDetect instCurrent(netlist);
+    CMirrExt instCurrent(netlist);
     instCurrent.printResult();
 
     return 0;
