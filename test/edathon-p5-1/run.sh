@@ -1,0 +1,1 @@
+../../bin/CMirr netlist
