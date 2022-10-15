@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 /*
 netlist parser
 */
-    CMirrDetect instCurrent(netlist);
+    CMirrExt instCurrent(netlist);
     instCurrent.output();
 
     return 0;
