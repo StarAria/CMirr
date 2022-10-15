@@ -29,7 +29,7 @@ file (GLOB SOURCES
     src/parser/*
     src/db/*
     src/global/*
-    # src/MirrExt/*
+    src/MirrExt/*
     src/main/*
 )
 

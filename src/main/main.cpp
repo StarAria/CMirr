@@ -1,7 +1,7 @@
 
 #include <string>
 #include "parser/simpNetlist.h"
-// #include "CMirrDetect.h"
+#include "CMirrDetect.h"
 
 int main(int argc, char* argv[])
 {
