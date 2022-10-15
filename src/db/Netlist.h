@@ -220,6 +220,7 @@ public:
     IndexType                       numNet() const                      { return _netArray.size(); }
 /*! @brief Return number of Inst. */
     IndexType                       numInst() const                     { return _instArray.size(); }
+    IndexType                       instId(int arrayid)                 { return _instArray[arrayid].id();}
 
     // Setters
 /*! @brief Add Pin to Netlist. */

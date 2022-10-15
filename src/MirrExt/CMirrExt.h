@@ -10,7 +10,7 @@ struct CMirrGroup
 {
     IndexType                   diodeMos;
     std::vector<IndexType>      mirrorMosArray;
-}
+};
 
 class CMirrExt
 {

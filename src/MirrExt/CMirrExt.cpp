@@ -3,18 +3,18 @@
 
 PROJECT_NAMESPACE_BEGIN
 
-void CMirrExt::CMirrExt(Netlist & Netlist)
-    :netlist(Netlist)
+void CMirrExt::CMirrExt(Netlist & netlist)
+    :netlist(netlist)
 {
     CMirrGroup tmp;
     diodeList.clear();
     groupList.clear();
     detectDiodes();
-    for(IndexType diode : groupList)
+    for(IndexType diode : diodeList)
     {
-        tmp = detectMirror(diode)
+        tmp = detectMirror(diode);
         if(tmp.mirrorMosArray.size())
-            groupList.push_back(tmp)
+            groupList.push_back(tmp);
     }
     return;
 }
@@ -23,17 +23,17 @@ IndexType CMirrExt::findPinNet(PinType type, IndexType mos)
 {
     for(IndexType pid : netlist.inst(mos).pinIdArray())
     {
-        if(netlist.pinIdArray(pid).type() == type)
-            return netlist.pinIdArray(pid).netId();
+        if(netlist.pin(pid).type() == type)
+            return netlist.pin(pid).netId();
     }
 }
 
 void CMirrExt::detectDiodes()
 {
-    for(IndexType mos : netlist.numInst())
+    for(IndexType index = 0; index < netlist.numInst(); index++)
     {
-        if(findPinNet(PinType::GATE, mos) == findPinNet(PinType::DRAIN, mos))
-            diodeList.push_back(mos.id());
+        if(findPinNet(PinType::GATE, netlist.instId(index)) == findPinNet(PinType::DRAIN, netlist.instId(index)))
+            diodeList.push_back(netlist.instId(index));
     }
     return;
 }
@@ -42,7 +42,7 @@ CMirrGroup CMirrExt::detectMirror(IndexType diode)
 {
     IndexType diodeGateNet = findPinNet(PinType::GATE, diode), tmpMos;
     CMirrGroup group;
-    group.diodeMos = diode
+    group.diodeMos = diode;
     for(IndexType pid : netlist.net(diodeGateNet).pinIdArray())
     {
         if(netlist.pin(pid).type() == PinType::GATE)
@@ -62,10 +62,10 @@ void CMirrExt::printResult()
     std::string file("CurrentMirror.txt");
     std::ofstream fout(file.c_str());
     bool firstLine = true;
-    fout << "{" << endl;
+    fout << "{" << std::endl;
     for(CMirrGroup group : groupList)
     {
-        for(IndexType mirrorMos : mirrorMosArray)
+        for(IndexType mirrorMos : group.mirrorMosArray)
         {
             if(firstLine)
                 firstLine = false;
