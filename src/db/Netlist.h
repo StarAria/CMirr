@@ -6,7 +6,7 @@
 #include "global/type.h"
 #include "db/Net.h"
 #include "db/Pin.h"
-#include "db/MOS.h"
+#include "db/Mos.h"
 
 PROJECT_NAMESPACE_BEGIN
 /*! @class Netlist
