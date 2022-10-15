@@ -1,5 +1,6 @@
 
 #include "MirrExt/CMirrExt.h"
+#include <iostream>
 
 PROJECT_NAMESPACE_BEGIN
 
@@ -48,8 +49,9 @@ CMirrGroup CMirrExt::detectMirror(IndexType diode)
         if(netlist.pin(pid).type() == PinType::GATE)
         {
             tmpMos = netlist.pin(pid).instId();
+            //std::cout << netlist.inst(diode).name() << "\t" << netlist.inst(tmpMos).name() << std::endl;
             if(findPinNet(PinType::GATE, tmpMos) != findPinNet(PinType::DRAIN, tmpMos) &&
-                findPinNet(PinType::SOURCE, diode) != findPinNet(PinType::SOURCE, tmpMos) &&
+                findPinNet(PinType::SOURCE, diode) == findPinNet(PinType::SOURCE, tmpMos) &&
                 netlist.inst(diode).type() == netlist.inst(tmpMos).type())
                 group.mirrorMosArray.push_back(tmpMos);
         }
@@ -59,6 +61,7 @@ CMirrGroup CMirrExt::detectMirror(IndexType diode)
 
 void CMirrExt::printResult()
 {
+    //std::cout << groupList.size() << "    " << diodeList.size() << std::endl;
     std::string file("CurrentMirror.txt");
     std::ofstream fout(file.c_str());
     bool firstLine = true;
