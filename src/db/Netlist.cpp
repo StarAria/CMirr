@@ -107,16 +107,6 @@ void Netlist::rmvInstHasPin(std::vector<IndexType> & instArray, IndexType pinId)
             ++it;
     }
     instArray.erase(instArray.end() - numRmv, instArray.end());
-// Below implementation using std::vector.erase(). O(n^2) complexity.
-//    auto it = instArray.begin();
-//    while (it != instArray.end())
-//    {
-//        IndexType instId = *it;
-//        if (_pinArray[pinId].instId() == instId)
-//            it = instArray.erase(it);
-//        else
-//            ++it;
-//    }
 }
 
 void Netlist::getInstPinConn(std::vector<IndexType> & instArray, IndexType pinId) const
@@ -144,16 +134,6 @@ void Netlist::fltrInstNetConnPinType(std::vector<IndexType> & instArray,
             ++it;
     }
     instArray.erase(instArray.end() - numRmv, instArray.end());
-// Below implementation using std::vector.erase(). O(n^2) complexity.
-//    auto it = instArray.begin();
-//    while (it != instArray.end())
-//    {
-//        IndexType instId = *it;
-//        if (instNetId(instId, connPinType) != netId)
-//            it = instArray.erase(it);
-//        else
-//            ++it;
-//    }
 }
 
 void Netlist::fltrInstPinConnPinType(std::vector<IndexType> & instArray, 
@@ -179,16 +159,6 @@ void Netlist::fltrInstMosType(std::vector<IndexType> & instArray, MosType mosTyp
             ++it;
     }
     instArray.erase(instArray.end() - numRmv, instArray.end());
-// Below implementation using std::vector.erase(). O(n^2) complexity.
-//    auto it = instArray.begin();
-//    while (it != instArray.end())
-//    {
-//        IndexType instId = *it; 
-//        if (Netlist::mosType(instId) != mosType)
-//            it = instArray.erase(it);
-//        else
-//            ++it;
-//    }
 }
 
 void Netlist::fltrInstType(std::vector<IndexType> & instArray, InstType type) const
