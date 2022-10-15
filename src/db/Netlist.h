@@ -45,6 +45,7 @@ public:
 
     bool                            isMos(InstType instType) const;
     bool                            isPasvDev(InstType instType) const;
+    MosType                         mosType(IndexType mosId) const;
 
     IndexType                       instNetId(IndexType instId, PinType pinType) const;
     IndexType                       instPinId(IndexType instId, PinType pinType) const;
