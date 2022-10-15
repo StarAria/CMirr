@@ -1,15 +1,17 @@
 
 #include <string>
-#include "parser/InitNetlist.h" //Fixme
-#include "CMirrDetect.h"
+#include "parser/simpNetlist.h"
+// #include "CMirrDetect.h"
 
 int main(int argc, char* argv[])
 {
-/*
-netlist parser
-*/
-    CMirrExt instCurrent(netlist);
-    instCurrent.output();
+    using namespace PROJECT_NAMESPACE;
+    Netlist netlist;
+    simpNetlist parser = simpNetlist(netlist);
+    std::string inFile(argv[1]);
+    parser.read(inFile); //initialize netlist with parser
+    CMirrDetect instCurrent(netlist);
+    instCurrent.printResult();
 
     return 0;
 }
