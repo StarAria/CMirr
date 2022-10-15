@@ -1,2 +1,2 @@
 # CMirr
-Current Mirror pair detect for IC netlists.
+Current Mirror pair detection for IC netlists.
