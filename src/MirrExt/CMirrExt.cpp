@@ -3,7 +3,7 @@
 
 PROJECT_NAMESPACE_BEGIN
 
-void CMirrExt::CMirrExt(Netlist & netlist)
+CMirrExt::CMirrExt(Netlist & netlist)
     :netlist(netlist)
 {
     CMirrGroup tmp;
@@ -70,12 +70,12 @@ void CMirrExt::printResult()
             if(firstLine)
                 firstLine = false;
             else
-                fout << ", " << endl;
+                fout << ", " << std::endl;
             fout << "\t{" << netlist.inst(group.diodeMos).name() << ", " << netlist.inst(mirrorMos).name() << "}";
         }
     }
-    fout << endl;
-    fout << "}" << endl;
+    fout << std::endl;
+    fout << "}" << std::endl;
     fout.close();
     return;
 }
